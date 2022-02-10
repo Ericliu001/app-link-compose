@@ -9,13 +9,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ericliu.myapplication.ui.theme.AppLinkApplicationTheme
 
 class MainActivity : ComponentActivity() {
-    private var greetingMessage = "Android"
+    private var greetingMessage = mutableStateOf("Android")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        handleIntent()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -41,21 +45,23 @@ class MainActivity : ComponentActivity() {
     private fun handleIntent() {
         intent.data?.let {
             intent.data?.lastPathSegment?.let {
-                greetingMessage = it
+                greetingMessage.value = it
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun Greeting(message: MutableState<String>) {
+    Text(text = "Hello ${message.value}!")
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     AppLinkApplicationTheme {
-        Greeting("Android")
+        Greeting(remember {
+            mutableStateOf("Android")
+        })
     }
 }
