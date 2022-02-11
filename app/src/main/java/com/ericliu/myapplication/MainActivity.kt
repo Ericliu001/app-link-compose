@@ -63,19 +63,26 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(message: MutableState<String>) {
     Surface(color = MaterialTheme.colors.primary) {
+        val clicked = remember { mutableStateOf(false) }
+
         Column {
             MakeTitle(message = "Hello")
-            MakeTitle(message = message.value)
+            MakeTitle(message = message.value, clicked.value)
 
-            Box(modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
                 OutlinedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        clicked.value = !clicked.value
+                    },
                     Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                         .fillMaxWidth(0.8f)
                 ) {
-                    Text(text = "Click Me")
+                    Text(text = if (clicked.value) "I'm Clicked!" else "Click Me.")
+
                 }
             }
         }
@@ -83,15 +90,27 @@ fun MyApp(message: MutableState<String>) {
 }
 
 @Composable
-fun MakeTitle(message: String) {
+fun MakeTitle(message: String, expanded: Boolean = false) {
+    var modifier = Modifier
+        .padding(24.dp)
+        .fillMaxWidth()
+
+    var fontSize = 25.sp
+
+    if (expanded) {
+        fontSize = 45.sp
+        modifier = modifier.height(80.dp)
+    } else {
+        fontSize = 25.sp
+        modifier = modifier.wrapContentHeight()
+    }
+
     Text(
         text = message,
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
-        fontSize = 25.sp,
-        modifier = Modifier
-            .padding(24.dp)
-            .fillMaxWidth()
+        fontSize = fontSize,
+        modifier = modifier
     )
 }
 
