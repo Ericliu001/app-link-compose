@@ -4,15 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -95,13 +94,12 @@ fun MakeTitle(message: String, expanded: Boolean = false) {
         .padding(24.dp)
         .fillMaxWidth()
 
-    var fontSize = 25.sp
+    val fontSize by animateIntAsState(targetValue = if (expanded) 45 else 25)
+    val enlargedSize by animateDpAsState(targetValue = 80.dp)
 
     if (expanded) {
-        fontSize = 45.sp
-        modifier = modifier.height(80.dp)
+        modifier = modifier.height(height = enlargedSize)
     } else {
-        fontSize = 25.sp
         modifier = modifier.wrapContentHeight()
     }
 
@@ -109,7 +107,7 @@ fun MakeTitle(message: String, expanded: Boolean = false) {
         text = message,
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
-        fontSize = fontSize,
+        fontSize = fontSize.sp,
         modifier = modifier
     )
 }
