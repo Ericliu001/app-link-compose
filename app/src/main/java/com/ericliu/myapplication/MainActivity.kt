@@ -1,21 +1,23 @@
 package com.ericliu.myapplication
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.ericliu.myapplication.link.AppLinkAuthorityProcessor
+import com.ericliu.myapplication.link.DeeplinkAuthorityProcessor
+import com.ericliu.myapplication.link.UriPathProcessor
+import com.ericliu.myapplication.link.UriSchemeProcessor
 import com.ericliu.myapplication.ui.theme.AppLinkApplicationTheme
 
 /**
@@ -55,70 +57,14 @@ class MainActivity : ComponentActivity() {
         intent.data?.let {
             intent.data?.lastPathSegment?.let {
                 greetingMessage.value = it
+
+                UriSchemeProcessor(
+                    AppLinkAuthorityProcessor(UriPathProcessor(greetingMessage)),
+                    DeeplinkAuthorityProcessor()
+                )
+                    .process(Uri.parse(it))
             }
         }
     }
 }
 
-@Composable
-fun MyApp(message: MutableState<String>) {
-    Surface(color = MaterialTheme.colors.primary) {
-        val clicked = remember { mutableStateOf(false) }
-
-        Column {
-            MakeTitle(message = "Hello")
-            MakeTitle(message = message.value, clicked.value)
-
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                OutlinedButton(
-                    onClick = {
-                        clicked.value = !clicked.value
-                    },
-                    Modifier
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                        .fillMaxWidth(0.8f)
-                ) {
-                    Text(text = if (clicked.value) "I'm Clicked!" else "Click Me.")
-
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun MakeTitle(message: String, expanded: Boolean = false) {
-    var modifier = Modifier
-        .padding(24.dp)
-        .fillMaxWidth()
-
-    val fontSize by animateIntAsState(targetValue = if (expanded) 45 else 25)
-    val enlargedSize by animateDpAsState(targetValue = 80.dp)
-
-    if (expanded) {
-        modifier = modifier.height(height = enlargedSize)
-    } else {
-        modifier = modifier.wrapContentHeight()
-    }
-
-    Text(
-        text = message,
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        fontSize = fontSize.sp,
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    AppLinkApplicationTheme {
-        MyApp(remember {
-            mutableStateOf("Android")
-        })
-    }
-}
