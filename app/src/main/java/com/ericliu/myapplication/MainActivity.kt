@@ -1,7 +1,6 @@
 package com.ericliu.myapplication
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -55,14 +54,12 @@ class MainActivity : ComponentActivity() {
 
     private fun handleIntent() {
         intent.data?.let {
-            intent.data?.lastPathSegment?.let {
-                greetingMessage.value = it
-
+            intent.data?.let {
                 UriSchemeProcessor(
                     AppLinkAuthorityProcessor(UriPathProcessor(greetingMessage)),
                     DeeplinkAuthorityProcessor()
                 )
-                    .process(Uri.parse(it))
+                    .process(it)
             }
         }
     }

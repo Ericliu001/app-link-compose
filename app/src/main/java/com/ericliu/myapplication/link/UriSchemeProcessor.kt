@@ -18,7 +18,6 @@ class UriSchemeProcessor(
             else ->
                 null
         }
-
         processor?.process(uri = uri)
     }
 }
