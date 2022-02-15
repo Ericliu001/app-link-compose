@@ -22,7 +22,7 @@ class UriProcessorRegistry(val dependencies: Dependencies) {
         if (isSchemeMatch) {
             val isAuthorityMatch =
                 uri.authority?.let { authority ->
-                    pattern.authority.any { it.authority == authority }
+                    pattern.authority.authority == authority
                 } ?: false
 
             if (isAuthorityMatch) {

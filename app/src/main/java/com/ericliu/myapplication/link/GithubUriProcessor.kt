@@ -11,7 +11,7 @@ class GithubUriProcessor(val message: MutableState<String>) : UriProcessor {
     override fun uriPattern(): UriPattern {
         return UriPattern(
             setOf(HTTPS, HTTP),
-            setOf(GITHUB),
+            GITHUB,
             Path(path = "user")
         )
     }

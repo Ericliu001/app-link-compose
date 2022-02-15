@@ -2,7 +2,7 @@ package com.ericliu.myapplication.link
 
 data class UriPattern(
     val scheme: Set<Scheme>,
-    val authority: Set<Authority>,
+    val authority: Authority,
     val path: Path = Path()
 ) {
 
