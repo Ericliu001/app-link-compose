@@ -21,8 +21,8 @@ class UriProcessorRegistry(val dependencies: Dependencies) {
 
         if (isSchemeMatch) {
             val isAuthorityMatch =
-                uri.authority?.let {
-                    pattern.authority.authority == it
+                uri.authority?.let { authority ->
+                    pattern.authority.any { it.authority == authority }
                 } ?: false
 
             if (isAuthorityMatch) {
@@ -34,9 +34,10 @@ class UriProcessorRegistry(val dependencies: Dependencies) {
                         true
                     } else {
 
-                        uri.path?.let {
-                            pattern.path.path == it || it.startsWith(pattern.path.pathPrefix) || it
-                                .matches(Regex(pattern.path.pathPattern))
+                        uri.path?.let { path ->
+                            pattern.path.path == path ||
+                                    path.startsWith(pattern.path.pathPrefix) ||
+                                    path.matches(Regex(pattern.path.pathPattern))
                         } ?: false
                     }
             }

@@ -20,7 +20,7 @@ class GithubUriProcessor(val message: MutableState<String>) : UriProcessor {
         val sb = StringBuilder()
         val params = parseQueryParams(uri = uri)
         for (entry in params.entries) {
-            sb.append("[${entry.key}, ${entry.value}]\n")
+            sb.append("{${entry.key}: ${entry.value}}\n")
         }
         message.value = sb.toString()
     }
