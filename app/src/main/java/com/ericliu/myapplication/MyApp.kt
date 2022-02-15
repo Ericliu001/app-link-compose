@@ -2,12 +2,7 @@ package com.ericliu.myapplication
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
@@ -65,7 +60,7 @@ fun MakeTitle(message: String, expanded: Boolean = false) {
     val enlargedSize by animateDpAsState(targetValue = 80.dp)
 
     if (expanded) {
-        modifier = modifier.height(height = enlargedSize)
+        modifier = modifier.heightIn(min = enlargedSize)
     } else {
         modifier = modifier.wrapContentHeight()
     }

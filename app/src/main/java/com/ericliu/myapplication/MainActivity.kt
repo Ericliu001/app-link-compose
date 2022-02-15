@@ -18,7 +18,7 @@ import com.ericliu.myapplication.link.UriProcessorRegistry
 import com.ericliu.myapplication.ui.theme.AppLinkApplicationTheme
 
 /**
- * Launch from https://ericliu001.github.io/user/eric
+ * Launch from https://ericliu001.github.io/user?name=eric&title=employee&age=5
  */
 class MainActivity : ComponentActivity(), UriProcessorRegistry.Dependencies {
     private val greetingMessage = mutableStateOf("Android")

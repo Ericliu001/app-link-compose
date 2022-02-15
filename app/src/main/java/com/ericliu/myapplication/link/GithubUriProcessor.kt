@@ -16,8 +16,11 @@ class GithubUriProcessor(val message: MutableState<String>) : UriProcessor {
     }
 
     override fun process(uri: Uri) {
-        uri.lastPathSegment?.let {
-            message.value = it
+        val sb = StringBuilder()
+        val params = parseQueryParams(uri = uri)
+        for (entry in params.entries) {
+            sb.append("[${entry.key}, ${entry.value}]\n")
         }
+        message.value = sb.toString()
     }
 }
