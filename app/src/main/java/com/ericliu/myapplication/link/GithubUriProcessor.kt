@@ -2,7 +2,7 @@ package com.ericliu.myapplication.link
 
 import android.net.Uri
 import androidx.compose.runtime.MutableState
-import com.ericliu.myapplication.link.UriPattern.Authority.GITHUB
+import com.ericliu.myapplication.link.UriPattern.Authority.ERICLIU001_GITHUB_IO
 import com.ericliu.myapplication.link.UriPattern.Path
 import com.ericliu.myapplication.link.UriPattern.Scheme.HTTP
 import com.ericliu.myapplication.link.UriPattern.Scheme.HTTPS
@@ -11,7 +11,7 @@ class GithubUriProcessor(val message: MutableState<String>) : UriProcessor {
     override fun uriPattern(): UriPattern {
         return UriPattern(
             setOf(HTTPS, HTTP),
-            GITHUB,
+            ERICLIU001_GITHUB_IO,
             Path(path = "user")
         )
     }

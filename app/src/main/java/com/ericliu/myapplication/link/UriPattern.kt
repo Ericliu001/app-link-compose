@@ -13,7 +13,7 @@ data class UriPattern(
     }
 
     enum class Authority(val authority: String) {
-        GITHUB("ericliu001.github.io")
+        ERICLIU001_GITHUB_IO("ericliu001.github.io")
     }
 
     data class Path(
