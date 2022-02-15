@@ -15,31 +15,29 @@ class UriProcessorRegistry(val dependencies: Dependencies) {
     private fun isMatch(uri: Uri, pattern: UriPattern): Boolean {
         var isMatched = false
 
-        val isSchemeMatch = uri.scheme?.let { scheme ->
+        val isSchemeMatched = uri.scheme?.let { scheme ->
             pattern.scheme.any { it.scheme == scheme }
         } ?: false
 
-        if (isSchemeMatch) {
-            val isAuthorityMatch =
+        if (isSchemeMatched) {
+            val isAuthorityMatched =
                 uri.authority?.let { authority ->
                     pattern.authority.authority == authority
                 } ?: false
 
-            if (isAuthorityMatch) {
-                isMatched =
-                    if (pattern.path.path.isEmpty() &&
-                        pattern.path.pathPattern.isEmpty() &&
-                        pattern.path.pathPattern.isEmpty()
-                    ) {
-                        true
-                    } else {
-
-                        uri.path?.let { path ->
-                            pattern.path.path == path ||
-                                    path.startsWith(pattern.path.pathPrefix) ||
-                                    path.matches(Regex(pattern.path.pathPattern))
-                        } ?: false
-                    }
+            if (isAuthorityMatched) {
+                isMatched = if (pattern.path.path.isEmpty() &&
+                    pattern.path.pathPattern.isEmpty() &&
+                    pattern.path.pathPattern.isEmpty()
+                ) {
+                    true
+                } else {
+                    uri.path?.let { path ->
+                        pattern.path.path == path ||
+                                path.startsWith(pattern.path.pathPrefix) ||
+                                path.matches(Regex(pattern.path.pathPattern))
+                    } ?: false
+                }
             }
         }
 
