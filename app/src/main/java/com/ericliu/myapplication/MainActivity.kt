@@ -11,19 +11,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import com.ericliu.myapplication.link.AppLinkAuthorityProcessor
-import com.ericliu.myapplication.link.DeeplinkAuthorityProcessor
-import com.ericliu.myapplication.link.UriPathProcessor
-import com.ericliu.myapplication.link.UriSchemeProcessor
+import com.ericliu.myapplication.link.UriProcessorRegistry
 import com.ericliu.myapplication.ui.theme.AppLinkApplicationTheme
 
 /**
  * Launch from https://ericliu001.github.io/user/eric
  */
-class MainActivity : ComponentActivity() {
-    private var greetingMessage = mutableStateOf("Android")
+class MainActivity : ComponentActivity(), UriProcessorRegistry.Dependencies {
+    private val greetingMessage = mutableStateOf("Android")
+    private val uriProcessorRegistry = UriProcessorRegistry(dependencies = MainActivity@ this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +42,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+
         handleIntent()
     }
 
@@ -53,15 +53,14 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleIntent() {
-        intent.data?.let {
-            intent.data?.let {
-                UriSchemeProcessor(
-                    AppLinkAuthorityProcessor(UriPathProcessor(greetingMessage)),
-                    DeeplinkAuthorityProcessor()
-                )
-                    .process(it)
-            }
+        intent.data?.let { uri ->
+            val processor = uriProcessorRegistry.getProcessor(uri)
+            processor?.process(uri)
         }
+    }
+
+    override fun message(): MutableState<String> {
+        return greetingMessage
     }
 }
 
