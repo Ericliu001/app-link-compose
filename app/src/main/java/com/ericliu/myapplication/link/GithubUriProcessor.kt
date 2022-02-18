@@ -11,7 +11,7 @@ class GithubUriProcessor(val message: MutableState<String>) : UriProcessor {
         return UriPattern(
             HTTPS,
             ERICLIU001_GITHUB_IO,
-            Path(pathExact = "/user")
+            Path(pathPrefix = "/user")
         )
     }
 
