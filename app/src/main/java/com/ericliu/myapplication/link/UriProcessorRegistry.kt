@@ -12,30 +12,38 @@ class UriProcessorRegistry(val dependencies: Dependencies) {
         }
     }
 
-    private fun isMatch(uri: Uri, pattern: UriPattern): Boolean {
+    internal fun isMatch(uri: Uri, pattern: UriPattern): Boolean {
         var isMatched = false
 
         val isSchemeMatched = uri.scheme?.let { scheme ->
-            pattern.scheme.any { it.scheme == scheme }
+            pattern.scheme.value == scheme
         } ?: false
 
         if (isSchemeMatched) {
             val isAuthorityMatched =
                 uri.authority?.let { authority ->
-                    pattern.authority.authority == authority
+                    pattern.authority.value == authority
                 } ?: false
 
             if (isAuthorityMatched) {
-                isMatched = if (pattern.path.path.isEmpty() &&
-                    pattern.path.pathPattern.isEmpty() &&
-                    pattern.path.pathPattern.isEmpty()
+                isMatched = if (pattern.path.pathExact == null &&
+                    pattern.path.pathPrefix == null &&
+                    pattern.path.pathPattern == null
                 ) {
                     true
                 } else {
                     uri.path?.let { path ->
-                        pattern.path.path == path ||
-                                path.startsWith(pattern.path.pathPrefix) ||
-                                path.matches(Regex(pattern.path.pathPattern))
+                        when {
+                            pattern.path.pathExact != null -> path == pattern.path.pathExact
+                            pattern.path.pathPrefix != null -> path.startsWith(pattern.path.pathPrefix)
+                            pattern.path.pathPattern != null -> path.matches(
+                                Regex(
+                                    pattern.path.pathPattern
+                                )
+                            )
+                            else -> false
+                        }
+
                     } ?: false
                 }
             }
