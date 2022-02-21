@@ -1,12 +1,11 @@
 package com.ericliu.myapplication.link
 
 import android.net.Uri
-import androidx.compose.runtime.MutableState
 
-class UriProcessorRegistry(val dependencies: Dependencies) {
+class UriProcessorLocator(private val processors: List<UriProcessor>) {
 
     fun getProcessor(uri: Uri): UriProcessor? {
-        return getProcessors().find {
+        return processors.find {
             val uriPattern = it.uriPattern()
             isMatch(uri, uriPattern)
         }
@@ -50,14 +49,5 @@ class UriProcessorRegistry(val dependencies: Dependencies) {
         }
 
         return isMatched
-    }
-
-
-    private fun getProcessors(): List<UriProcessor> {
-        return listOf(GithubUriProcessor(dependencies.message()))
-    }
-
-    interface Dependencies {
-        fun message(): MutableState<String>
     }
 }

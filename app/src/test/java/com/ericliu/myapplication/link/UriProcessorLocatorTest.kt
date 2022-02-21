@@ -1,7 +1,6 @@
 package com.ericliu.myapplication.link
 
 import android.net.Uri
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import junit.framework.TestCase.*
 import org.junit.Before
@@ -10,23 +9,23 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class UriProcessorRegistryTest {
-    private lateinit var uriProcessorRegistry: UriProcessorRegistry
+class UriProcessorLocatorTest {
+    private lateinit var uriProcessorLocator: UriProcessorLocator
 
     @Before
     fun setUp() {
-        uriProcessorRegistry = UriProcessorRegistry(object : UriProcessorRegistry.Dependencies {
-            override fun message(): MutableState<String> {
-                return mutableStateOf("")
-            }
-        })
+        uriProcessorLocator = UriProcessorLocator(
+            listOf(
+                GithubUriProcessor(mutableStateOf(""))
+            )
+        )
     }
 
     @Test
     fun testGetProcessorStandardLink() {
         val uri =
             Uri.parse("https://ericliu001.github.io/user?name=eric&title=employee&age=5")
-        val processor = uriProcessorRegistry.getProcessor(uri = uri)
+        val processor = uriProcessorLocator.getProcessor(uri = uri)
         assertNotNull(processor)
     }
 
@@ -40,7 +39,7 @@ class UriProcessorRegistryTest {
                 .ERICLIU001_GITHUB_IO, UriPattern.Path(pathExact = "/user/hello")
         )
 
-        assertTrue(uriProcessorRegistry.isMatch(uri, uriPattern))
+        assertTrue(uriProcessorLocator.isMatch(uri, uriPattern))
     }
 
     @Test
@@ -52,7 +51,7 @@ class UriProcessorRegistryTest {
             UriPattern.Scheme.HTTPS, UriPattern.Authority
                 .ERICLIU001_GITHUB_IO, UriPattern.Path(pathPrefix = "/user")
         )
-        assertTrue(uriProcessorRegistry.isMatch(uri = uri, uriPattern))
+        assertTrue(uriProcessorLocator.isMatch(uri = uri, uriPattern))
     }
 
     @Test
@@ -64,7 +63,7 @@ class UriProcessorRegistryTest {
             UriPattern.Scheme.HTTPS, UriPattern.Authority
                 .ERICLIU001_GITHUB_IO, UriPattern.Path(pathPrefix = "/good")
         )
-        assertFalse(uriProcessorRegistry.isMatch(uri = uri, uriPattern))
+        assertFalse(uriProcessorLocator.isMatch(uri = uri, uriPattern))
     }
 
 
@@ -75,7 +74,7 @@ class UriProcessorRegistryTest {
             UriPattern.Scheme.HTTPS, UriPattern.Authority
                 .ERICLIU001_GITHUB_IO, UriPattern.Path(pathPattern = ".*\\/hello\\/.*")
         )
-        assertTrue(uriProcessorRegistry.isMatch(uri = uri, uriPattern))
+        assertTrue(uriProcessorLocator.isMatch(uri = uri, uriPattern))
     }
 
 }
